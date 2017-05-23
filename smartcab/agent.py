@@ -8,7 +8,7 @@ class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
         This is the object you will be modifying. """ 
 
-    def __init__(self, env, learning=True, epsilon=1.3, alpha=0.95):
+    def __init__(self, env, learning=True, epsilon=0.9, alpha=0.95):
         super(LearningAgent, self).__init__(env)     # Set the agent in the evironment 
         self.planner = RoutePlanner(self.env, self)  # Create a route planner
         self.valid_actions = self.env.valid_actions  # The set of valid actions
@@ -57,7 +57,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs)
+        state = (waypoint, inputs['light'], inputs['left'] == 'forward', inputs['oncoming'])
 
         return state
 
@@ -107,8 +107,9 @@ class LearningAgent(Agent):
  
         action = self.valid_actions[random.randint(0, len(self.valid_actions)-1)]
         if self.learning:
-            inverseQ = {v: k for k, v in self.Q[str(self.state)].iteritems()}
-            action = inverseQ[self.get_maxQ(self.state)] if random.uniform(0, 1) <= 1 - self.epsilon else action
+            maxQ = self.get_maxQ(self.state)
+            maxQActions = [k for k in self.Q[str(self.state)].keys() if self.Q[str(self.state)][k] == maxQ]
+            action = maxQActions[random.randint(0, len(maxQActions)-1)] if random.uniform(0, 1) <= 1 - self.epsilon else action
  
         return action
 
@@ -123,8 +124,8 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-
-        self.Q[str(state)][action] += self.alpha * (reward + self.get_maxQ(state) - self.Q[str(state)][action])
+        # 0 below corresponds to gamma = 0 (since we're not supposed to use discount factor gamma)
+        self.Q[str(state)][action] += self.alpha * (reward + 0 * self.get_maxQ(state) - self.Q[str(state)][action])
 
 
     def update(self):
@@ -178,7 +179,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(tolerance=0.03, n_test=15)
+    sim.run(tolerance=0.01, n_test=15)
 
 
 if __name__ == '__main__':
