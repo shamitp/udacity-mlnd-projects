@@ -4,7 +4,7 @@ this project is to put together what I've learned in this program to solve a rea
 techniques. The tools used in this project were Python, numpy, pandas, sklearn, and matplotlib.
 
 Software Used:
-capstone.py - Main code for the project that runs all the regression models
+capstone.py - Main code for the project that runs all the regression models,
 visuals.py - Supplementary visualization code from Udacity (modified slightly for this project)
 
 Supporting Material:
