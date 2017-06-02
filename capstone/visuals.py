@@ -35,6 +35,9 @@ def pca_results(good_data, pca):
 
 	# Create a bar plot visualization
 	fig, ax = plt.subplots(figsize = (14,8))
+	
+	# Set the title of figure
+	fig.suptitle('Explained Variances of First 10 Principal Components of Features Data')
 
 	# Plot the feature weights as a function of the components
 	components.plot(ax = ax, kind = 'bar', legend=False);
@@ -43,8 +46,9 @@ def pca_results(good_data, pca):
 
 	# Display the explained variance ratios
 	for i, ev in enumerate(pca.explained_variance_ratio_):
-		ax.text(i-0.40, ax.get_ylim()[1] + 0.05, "Explained Variance\n          %.4f"%(ev))
+		ax.text(i-0.40, ax.get_ylim()[1] + 0.05, "Explained Var.\n      %.4f"%(ev))
 		
+	# Save figure to file
 	fig.savefig('pca.jpg')
 	
 	# Return a concatenated DataFrame
